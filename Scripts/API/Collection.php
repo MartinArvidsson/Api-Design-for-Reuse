@@ -4,18 +4,19 @@ class Collection
     private $collectionID;
     private $CollectionName;
     private $ParentCollection;
+    private $UnderCollections = array();
     //$CollectionName
     
-    public function __construct($collectionID,$ParentCollection)
+    public function __construct($collectionID,$CollectionName,$ParentCollection)
     {
         $this->collectionID = $collectionID;
-        //$this->CollectionName = $CollectionName;
+        $this->CollectionName = $CollectionName;
         $this->ParentCollection = $ParentCollection;
     }
     
     public function getCollectionID()
     {
-        return $this-> collectionID;
+        return $this->collectionID;
     }
     
     public function getCollectionName()

@@ -10,7 +10,7 @@ class Api
     private $errormessage;
     //$CollectionName
 
-    public function AddCollection($collectionID,$ParentCollection)
+    public function AddCollection($collectionID,$CollectionName,$ParentCollection)
     {
         $errormessage = "TEST";
         $this-> Collections = self::GetCollections();
@@ -21,12 +21,12 @@ class Api
         }
         
         //$CollectionName
-        array_push($this->Collections,new Collection($collectionID,$ParentCollection));
+        array_push($this->Collections,new Collection($collectionID,$CollectionName,$ParentCollection));
         
         $this->serialized = serialize($this->Collections);
         
         
-        
+        $this->errormessage = $collectionID;
         file_put_contents(self::$Collectionpath, $this->serialized);
     }
     
