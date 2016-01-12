@@ -4,9 +4,13 @@ class Main
 {
     private static $Registerbutton = 'Main::Search';
     private static $Searchbutton = 'Main::Find';
+    private static $Deletebutton = 'Main::Delete';
+    
     private static $Collectiontoadd = 'Main::NewCollection';
     private static $Collectiontofind = 'Main::Collectiontofind';
+    private static $Collectiontodelete = 'Main::Collectiontodelete';
     private static $ParentCollection = 'Main::ParentCollection';
+    
     private $CollectionID;
     private $message;
     private $cName;
@@ -45,6 +49,14 @@ class Main
     	   	 <input type="text" id="'.self::$Collectiontofind.'"  name="'.self::$Collectiontofind.'"/> 
     	   	 <br>
     	   	 <input type="submit" name="'.self::$Searchbutton.'" value="search" />
+    	   	 </form>
+    	   	 
+    	   	 <p>Collection to delete</p>
+    	   	 <form action="'.$this->deleteCollection().'"method="post" >
+             <p>ID of collection</p>
+    	   	 <input type="text" id="'.self::$Collectiontodelete.'"  name="'.self::$Collectiontodelete.'"/> 
+    	   	 <br>
+    	   	 <input type="submit" name="'.self::$Deletebutton.'" value="search" />
     	   	 </form>
         ';
         
@@ -87,6 +99,19 @@ class Main
                  .';
                 
                 header("Location:?Search=True");
+            }
+        }
+    }
+    
+    private function deleteCollection()
+    {
+        if(isset($_POST[self::$Deletebutton]))
+        {
+            if($_POST[self::$Collectiontodelete])
+            {
+                $this->api->deleteCollection($_POST[self::$Collectiontodelete]);
+                
+                header("Location:?Delete=True");
             }
         }
     }

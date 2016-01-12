@@ -47,18 +47,27 @@ class Api
     
     public function getCollection($IDtoval)
     {
-        foreach ($this->GetCollections() as $c) {
-                
-                if($c->getCollectionID() == $IDtoval)
-                {
-                  return $c;
-                }
+        foreach ($this->GetCollections() as $c) 
+        {
+            if($c->getCollectionID() == $IDtoval)
+            {
+              return $c;
             }
+        }
     }
     
-    public function DeleteCollection()
+    public function DeleteCollection($IDtodelete)
     {
-        
+        $this->Collections = self::GetCollections();
+        foreach ($this->Collections as $c) 
+        {
+            if($c->getCollectionID() == $IDtodelete)
+            {
+                unset($this->Collections[$c]);
+                $this->serialized = serialize($this->Collections);
+                file_put_contents(self::$Collectionpath, $this->serialized);
+            }
+        }
     }
     
     public function AddArtifact()
