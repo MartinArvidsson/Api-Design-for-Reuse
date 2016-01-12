@@ -1,5 +1,5 @@
 <?php
-require_once("Api.php");
+require_once("API/Api.php");
 class Main
 {
     private static $Registerbutton = 'Main::Search';
@@ -28,7 +28,7 @@ class Main
     	   	 <br>
     	   	 <p>Parentcollection(Not needed)</p>
     	   	 <input type="text" id="'.self::$ParentCollection.'" name="'.self::$ParentCollection.'"/> 
-    	   	 <input type="submit" name="'.self::$Registerbutton.'" value="Search" />
+    	   	 <input type="submit" name="'.self::$Registerbutton.'" value="Add" />
     	   	 </form>
               
              </body>
@@ -37,28 +37,25 @@ class Main
         
         if(isset($POST[self::$Registerbutton]))
         {
-            if(isset($POST[self::$Collectiontoadd]) && !isset($POST[self::$ParentCollection]))
+            if(isset($POST[self::$Collectiontoadd]))
             {
                 for ($i = 0; $i < 5; $i++) 
                 {
-                     $this->$CollectionID += rand(0,9);
+                     $this->CollectionID += rand(0,9);
                 }
+                var_dump($this->CollectionID);
                 
-                $files = $this->$api->GetCollections();
+                // $collections = $this->api->GetCollections();
                 
-                foreach ($files as $fileName)
-                {
-                    if($fileName == $collectionID)
-                    {
-                      throw new Exception("FolderID Exist");
-                    }
-                }
-                $this->$api->AddCollection($collectionID,$POST[self::$Collectiontoadd],null);
-                echo "This is the collectionid:$CollectionID , you need it to get the folder";
-            }
-            if(!isset($POST[self::$Collectiontoadd]) && isset($POST[self::$ParentCollection]))
-            {
-                echo "Need a collectionname";
+                // foreach ($collections as $collection)
+                // {
+                //     if($collection == $collectionID)
+                //     {
+                //       throw new Exception("Folder not found");
+                //     }
+                // }
+                $this->api->AddCollection($this->CollectionID,$POST[self::$Collectiontoadd],null);
+                echo "<p>This is the collectionid:$CollectionID , you need it to get the folder</p>";
             }
         }
 
