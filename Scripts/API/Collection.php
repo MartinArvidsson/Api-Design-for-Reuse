@@ -4,11 +4,12 @@ class Collection
     private $collectionID;
     private $CollectionName;
     private $ParentCollection;
+    //$CollectionName
     
-    public function __construct($collectionID,$CollectionName,$ParentCollection)
+    public function __construct($collectionID,$ParentCollection)
     {
         $this->collectionID = $collectionID;
-        $this->CollectionName = $CollectionName;
+        //$this->CollectionName = $CollectionName;
         $this->ParentCollection = $ParentCollection;
     }
     

@@ -6,12 +6,20 @@ class Main
     private static $Collectiontoadd = 'Main::NewCollection';
     private static $ParentCollection = 'Main::ParentCollection';
     private $CollectionID;
+    private $message;
+    
     public function __construct()
     {
-        $Api = new Api;
+        $this->api = new Api;
     }
     
-    public function generateHTML()
+    public function generateform()
+    {
+        $message = $this->api->geterror();
+        $this->generateHTML($message);
+    }
+    
+    private function generateHTML($message)
     {
         echo '<!DOCTYPE html>
           <html>
@@ -22,7 +30,8 @@ class Main
             <body>
               <h1>Api example</h1>
               <p>Add Collection</p>
-             <form method="post" >
+              <p>'.$message.'</p>
+             <form action="'.$this->addCollection().'"method="post" >
              <p>Name of collection</p>
     	   	 <input type="text" id="'.self::$Collectiontoadd.'"  name="'.self::$Collectiontoadd.'"/> 
     	   	 <br>
@@ -34,17 +43,20 @@ class Main
              </body>
           </html>
         ';
-        
-        if(isset($POST[self::$Registerbutton]))
-        {
-            if(isset($POST[self::$Collectiontoadd]))
-            {
-                for ($i = 0; $i < 5; $i++) 
-                {
-                     $this->CollectionID += rand(0,9);
+    }
+    
+    private function addCollection()
+    {
+        // if(isset($POST[self::$Registerbutton]))
+        // {
+        //     if(isset($POST[self::$Collectiontoadd]))
+        //     {
+                $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $charactersLength = strlen($characters);
+                $randomString = '';
+                for ($i = 0; $i < 10; $i++) {
+                    $this->CollectionID .= $characters[rand(0, $charactersLength - 1)];
                 }
-                var_dump($this->CollectionID);
-                
                 // $collections = $this->api->GetCollections();
                 
                 // foreach ($collections as $collection)
@@ -54,10 +66,9 @@ class Main
                 //       throw new Exception("Folder not found");
                 //     }
                 // }
-                $this->api->AddCollection($this->CollectionID,$POST[self::$Collectiontoadd],null);
-                echo "<p>This is the collectionid:$CollectionID , you need it to get the folder</p>";
-            }
-        }
-
+                //$POST[self::$Collectiontoadd]
+                $this->api->AddCollection($this->CollectionID,null);
+        //     }
+        // }
     }
 }

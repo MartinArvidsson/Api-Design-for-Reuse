@@ -1,14 +1,18 @@
 <?php
-require_once("../API/Collection.php");
+require_once("Collection.php");
+
 class Api
 {
-    private $Collectionpath = "../Collections/Collections.bin";
+    private static $Collectionpath = "../Collections/Collections.bin";
     private $Artifactpath = "../Artifacts";
     private $Collections = array();
     private $serialized;    
+    private $errormessage;
+    //$CollectionName
 
-    public function AddCollection($collectionID,$CollectionName,$ParentCollection)
+    public function AddCollection($collectionID,$ParentCollection)
     {
+        $errormessage = "TEST";
         $this-> Collections = self::GetCollections();
         
         if($this->Collections == false)
@@ -16,14 +20,14 @@ class Api
             $this->Collections = array();
         }
         
-        
-        array_push($this->Collections,new Collection($collectionID,$CollectionName,$ParentCollection));
+        //$CollectionName
+        array_push($this->Collections,new Collection($collectionID,$ParentCollection));
         
         $this->serialized = serialize($this->Collections);
         
         
         
-        file_put_contents(self::$Collectionpath, $this->Collections);
+        file_put_contents(self::$Collectionpath, $this->serialized);
     }
     
     public function GetCollections()
@@ -49,5 +53,10 @@ class Api
     public function DeleteArtifact()
     {
         
+    }
+    
+    public function geterror()
+    {
+        return $this->errormessage;
     }
 }
