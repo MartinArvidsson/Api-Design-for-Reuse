@@ -66,15 +66,9 @@ class Main
         {
              if(isset($_POST[self::$Collectiontoadd]))
              {
-                $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $charactersLength = strlen($characters);
-                $randomString = '';
-                for ($i = 0; $i < 10; $i++) {
-                    $this->CollectionID .= $characters[rand(0, $charactersLength - 1)];
-                }
-                $this->api->AddCollection($this->CollectionID,$_POST[self::$Collectiontoadd],null);
-                $_SESSION["PreviousID"] = $this->CollectionID;
-                header("Location: " . $_SERVER['REQUEST_URI']."?Reg=True");
+                
+                $_SESSION["PreviousID"] = $this->api->AddCollection($_POST[self::$Collectiontoadd],null);
+                header("Location:?Reg=True");
              }
         }
     }
@@ -86,8 +80,13 @@ class Main
             if($_POST[self::$Collectiontofind])
             {
                 $r = $this->api->getCollection($_POST[self::$Collectiontofind]);
-                $_SESSION["ResponseCollection"] = 'Name: '.$r->getCollectionName().' Id: '.$r->getCollectionID().' Parentcollection: '.$r->getParentCollection().'.';
-                header("Location: " . $_SERVER['REQUEST_URI']."?Search=True");
+                
+                $_SESSION["ResponseCollection"] = 
+                'Name: '.$r->getCollectionName().'<br> 
+                 Id: '.$r->getCollectionID().'<br>
+                 .';
+                
+                header("Location:?Search=True");
             }
         }
     }

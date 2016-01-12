@@ -8,9 +8,10 @@ class Api
     private $Collections = array();
     private $serialized;    
     private $errormessage;
+    private $collectionID;
     //$CollectionName
 
-    public function AddCollection($collectionID,$CollectionName,$ParentCollection)
+    public function AddCollection($CollectionName,$ParentCollection)
     {
         $errormessage = "TEST";
         $this-> Collections = self::GetCollections();
@@ -19,15 +20,24 @@ class Api
         {
             $this->Collections = array();
         }
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < 10; $i++) {
+            
+                $this->collectionID .= $characters[rand(0, $charactersLength - 1)];
+        }
         
         //$CollectionName
-        array_push($this->Collections,new Collection($collectionID,$CollectionName,$ParentCollection));
+        array_push($this->Collections,new Collection($this->collectionID,$CollectionName,$ParentCollection));
         
         $this->serialized = serialize($this->Collections);
         
         
         $this->errormessage = $collectionID;
         file_put_contents(self::$Collectionpath, $this->serialized);
+        
+        return $this->collectionID;
     }
     
     private function GetCollections()
