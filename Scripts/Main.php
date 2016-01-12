@@ -12,7 +12,6 @@ class Main
     private $cName;
     private $cID;
     private $cParent;
-    
     public function __construct()
     {
         $this->api = new Api();
@@ -26,6 +25,8 @@ class Main
     
     private function generateHTML($message)
     {
+        $uri = $_SERVER["REQUEST_URI"];
+        $_uri = explode("?",$uri);
         echo '
               <h1>Api example</h1>
              <p>Add Collection</p>             
@@ -46,28 +47,16 @@ class Main
     	   	 <input type="submit" name="'.self::$Searchbutton.'" value="search" />
     	   	 </form>
         ';
-        $uri = $_SERVER["REQUEST_URI"];
-
-        $uri = explode("?",$uri);
         
-        if (count($uri) > 1 && $uri[1] == "Reg=True")
+        if (count($_uri) > 1 && $_uri[1] == "Reg=True")
         {
             echo 'Sucess, here is the ID to search for the collection: '.$_SESSION["PreviousID"].'';
             unset($_SESSION["PreviousID"]);
         }
-        
-        if (count($uri) > 1 && $uri[1] == "Search=")
+        if (count($_uri) > 1 && $_uri[1] == "Search=True")
         {
-            foreach ($_SESSION["Collections"] as $c) {
-                $this->cID = $c->getCollectionID();
-                if($this->cID == $_SESSION["idtoval"])
-                {
-                  echo 'name'.$c->getCollectionName.'id'.$c->getCollectionID().'parentcollection'.$c->getParentCollection.'.';
-                  unset($_SESSION["Collections"]);
-                  unset($_SESSION["idtoval"]);
-                }
-            }
-            unset($_SESSION["PreviousID"]);
+            //var_dump($_SESSION["ResponseCollection"]);
+            echo $_SESSION["ResponseCollection"];
         }
     }
     
@@ -96,9 +85,9 @@ class Main
         {
             if($_POST[self::$Collectiontofind])
             {
-               $_SESSION["Collections"]  = $this->api->GetCollections();
-               $_SESSION["Idtoval"] = $_POST[self::$Collectiontofind];
-               header("Location: " . $_SERVER['REQUEST_URI']."?Search=".$_POST[self::$Collectiontofind]);
+                $r = $this->api->getCollection($_POST[self::$Collectiontofind]);
+                $_SESSION["ResponseCollection"] = 'Name: '.$r->getCollectionName().' Id: '.$r->getCollectionID().' Parentcollection: '.$r->getParentCollection().'.';
+                header("Location: " . $_SERVER['REQUEST_URI']."?Search=True");
             }
         }
     }
