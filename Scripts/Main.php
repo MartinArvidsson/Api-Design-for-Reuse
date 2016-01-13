@@ -48,7 +48,7 @@ class Main
              <p>ID of collection</p>
     	   	 <input type="text" id="'.self::$Collectiontofind.'"  name="'.self::$Collectiontofind.'"/> 
     	   	 <br>
-    	   	 <input type="submit" name="'.self::$Searchbutton.'" value="search" />
+    	   	 <input type="submit" name="'.self::$Searchbutton.'" value="Search" />
     	   	 </form>
     	   	 
     	   	 <p>Collection to delete</p>
@@ -56,7 +56,7 @@ class Main
              <p>ID of collection</p>
     	   	 <input type="text" id="'.self::$Collectiontodelete.'"  name="'.self::$Collectiontodelete.'"/> 
     	   	 <br>
-    	   	 <input type="submit" name="'.self::$Deletebutton.'" value="search" />
+    	   	 <input type="submit" name="'.self::$Deletebutton.'" value="Delete" />
     	   	 </form>
         ';
         

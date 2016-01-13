@@ -9,6 +9,7 @@ class Api
     private $serialized;    
     private $errormessage;
     private $collectionID;
+    private $todelete;
     //$CollectionName
 
     public function AddCollection($CollectionName,$ParentCollection)
@@ -63,11 +64,12 @@ class Api
         {
             if($c->getCollectionID() == $IDtodelete)
             {
-                unset($this->Collections[$c]);
-                $this->serialized = serialize($this->Collections);
-                file_put_contents(self::$Collectionpath, $this->serialized);
+                $this->todelete = $c;
             }
         }
+        unset($this->Collections[$this->todelete]);
+        $this->serialized = serialize($this->Collections);
+        file_put_contents(self::$Collectionpath, $this->serialized);
     }
     
     public function AddArtifact()
