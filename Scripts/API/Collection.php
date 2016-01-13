@@ -4,14 +4,14 @@ class Collection
     private $collectionID;
     private $CollectionName;
     private $ParentCollection;
-    private $UnderCollections = array();
+    private $ChildCollections = array();
+    private $Arifacts = array();
     //$CollectionName
     
-    public function __construct($collectionID,$CollectionName,$ParentCollection)
+    public function __construct($collectionID,$CollectionName)
     {
         $this->collectionID = $collectionID;
         $this->CollectionName = $CollectionName;
-        $this->ParentCollection = $ParentCollection;
     }
     
     public function getCollectionID()
@@ -24,8 +24,8 @@ class Collection
         return $this->CollectionName;
     }
     
-    public function getParentCollection()
+    public function addChild()
     {
-        return $this->ParentCollection;
+        array_push($this->ChildCollections,new Collection($this->collectionID,$CollectionName));
     }
 }

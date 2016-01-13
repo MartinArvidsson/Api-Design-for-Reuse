@@ -14,28 +14,33 @@ class Api
 
     public function AddCollection($CollectionName,$ParentCollection)
     {
-        $errormessage = "TEST";
         $this-> Collections = self::GetCollections();
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < 10; $i++) 
+        {
+            $this->collectionID .= $characters[rand(0, $charactersLength - 1)];
+        }
         
         if($this->Collections == false)
         {
             $this->Collections = array();
         }
-        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < 10; $i++) {
-            
-                $this->collectionID .= $characters[rand(0, $charactersLength - 1)];
+        
+        if(!$parentcollection ="" || !$parentcollection == null)
+        {
+            $c = self::getCollection($parentcollection);
+            $NewChild = new Collection($this->collectionID,$CollectionName);
+            $c->addChild();
         }
-        
-        //$CollectionName
-        array_push($this->Collections,new Collection($this->collectionID,$CollectionName,$ParentCollection));
-        
+        else 
+        {
+            //$CollectionName
+            array_push($this->Collections,new Collection($this->collectionID,$CollectionName));   
+        }
         $this->serialized = serialize($this->Collections);
         
-        
-        $this->errormessage = $collectionID;
         file_put_contents(self::$Collectionpath, $this->serialized);
         
         return $this->collectionID;
@@ -48,7 +53,7 @@ class Api
     
     public function getCollection($IDtoval)
     {
-        foreach ($this->GetCollections() as $c) 
+        foreach (self::GetCollections() as $c) 
         {
             if($c->getCollectionID() == $IDtoval)
             {
@@ -60,6 +65,7 @@ class Api
     public function DeleteCollection($IDtodelete)
     {
         $this->Collections = self::GetCollections();
+        
         foreach ($this->Collections as $c) 
         {
             if($c->getCollectionID() == $IDtodelete)
@@ -67,7 +73,11 @@ class Api
                 $this->todelete = $c;
             }
         }
-        unset($this->Collections[$this->todelete]);
+        if (($key = array_search($this->todelete, $this->Collections)) !== false) 
+        {
+            unset($this->Collections[$key]);
+        }
+        
         $this->serialized = serialize($this->Collections);
         file_put_contents(self::$Collectionpath, $this->serialized);
     }
