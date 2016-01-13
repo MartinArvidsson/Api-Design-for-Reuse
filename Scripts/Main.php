@@ -76,10 +76,10 @@ class Main
     {
         if(isset($_POST[self::$Registerbutton]))
         {
-             if(isset($_POST[self::$Collectiontoadd]))
+             if(isset($_POST[self::$Collectiontoadd]) && isset($_POST[self::$ParentCollection]))
              {
                 
-                $_SESSION["PreviousID"] = $this->api->AddCollection($_POST[self::$Collectiontoadd],null);
+                $_SESSION["PreviousID"] = $this->api->AddCollection($_POST[self::$Collectiontoadd],$_POST[self::$ParentCollection]);
                 header("Location:?Reg=True");
              }
         }
@@ -96,7 +96,8 @@ class Main
                 $_SESSION["ResponseCollection"] = 
                 'Name: '.$r->getCollectionName().'<br> 
                  Id: '.$r->getCollectionID().'<br>
-                 .';
+                 ChildNames:'.$r->getChildNames().'<br>
+                 ChildIDs:'.$r->getChildID();
                 
                 header("Location:?Search=True");
             }

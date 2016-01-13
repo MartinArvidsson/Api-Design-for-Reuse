@@ -14,7 +14,7 @@ class Api
 
     public function AddCollection($CollectionName,$ParentCollection)
     {
-        $this-> Collections = self::GetCollections();
+        $this->Collections = self::GetCollections();
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -28,11 +28,14 @@ class Api
             $this->Collections = array();
         }
         
-        if(!$parentcollection ="" || !$parentcollection == null)
+        if($ParentCollection != "")
         {
-            $c = self::getCollection($parentcollection);
+            $c = self::getCollection($ParentCollection);
+            var_dump($c);
             $NewChild = new Collection($this->collectionID,$CollectionName);
-            $c->addChild();
+            $c->addChild($this->collectionID,$CollectionName);
+            array_push($this->Collections,$NewChild);   
+            
         }
         else 
         {

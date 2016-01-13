@@ -4,7 +4,8 @@ class Collection
     private $collectionID;
     private $CollectionName;
     private $ParentCollection;
-    private $ChildCollections = array();
+    private $ChildCollectionNames = array();
+    private $ChildCollectionIDs = array();
     private $Arifacts = array();
     //$CollectionName
     
@@ -23,9 +24,17 @@ class Collection
     {
         return $this->CollectionName;
     }
-    
-    public function addChild()
+    public function getChildNames()
     {
-        array_push($this->ChildCollections,new Collection($this->collectionID,$CollectionName));
+        return $this->ChildCollectionNames[0];
+    }
+    public function getChildID()
+    {
+        return $this->ChildCollectionIDs[0];
+    }
+    public function addChild($collectionID,$CollectionName)
+    {
+        array_push($this->ChildCollectionNames,$CollectionName);
+        array_push($this->ChildCollectionIDs,$collectionID);
     }
 }
