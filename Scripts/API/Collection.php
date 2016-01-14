@@ -35,9 +35,8 @@ class Collection
     }
     public function addChild($collectionID,$CollectionName)
     {
-        array_push($this->ChildCollectionNames,$CollectionName);
         array_push($this->ChildCollectionIDs,$collectionID);
-        $this->CollectionName = "Gick in hit";
+        array_push($this->ChildCollectionNames,$CollectionName);
     }
     public function addArtifact($Artifactname)
     {
@@ -47,6 +46,7 @@ class Collection
     {
         return $this->Artifacts();
     }
+    
     public function removeArtifact($Artifactname)
     {
         foreach (self::getArtifacts() as $art) 

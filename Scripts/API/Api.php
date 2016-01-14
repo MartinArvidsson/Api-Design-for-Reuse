@@ -26,23 +26,20 @@ class Api
         {
             $this->collectionID .= $characters[rand(0, $charactersLength - 1)];
         }
-        if($ParentCollection != "")
+        if($ParentCollection != null)
         {
             $NewChild = new Collection($this->collectionID,$CollectionName);
-            $c = self::getCollection($ParentCollection);
-            $c->addChild($this->collectionID,$CollectionName);
-            array_push($this->Collections,$NewChild);   
-            
+            $ParentCollection->addChild($this->collectionID,$CollectionName);
+            array_push($this->Collections,$NewChild);
+            //Pusha in updaterade parentcollection.
         }
         else 
         {
-            //$CollectionName
             array_push($this->Collections,new Collection($this->collectionID,$CollectionName));   
         }
+        
         $this->serialized = serialize($this->Collections);
-        
         file_put_contents(self::$Collectionpath, $this->serialized);
-        
         return $this->collectionID;
     }
     

@@ -66,6 +66,7 @@ class Main
         {
             echo 'Sucess, here is the ID to search for the collection: '.$_SESSION["PreviousID"].'';
             unset($_SESSION["PreviousID"]);
+            
             var_dump($_SESSION["Parent"]);
         }
         if (count($_uri) > 1 && $_uri[1] == "Search=True")
@@ -83,9 +84,9 @@ class Main
         {
              if(isset($_POST[self::$Collectiontoadd]) && isset($_POST[self::$ParentCollection]))
              {
-                
-                $_SESSION["PreviousID"] = $this->api->AddCollection($_POST[self::$Collectiontoadd],$_POST[self::$ParentCollection]);
-                $_SESSION["Parent"] = $_POST[self::$ParentCollection];
+                $r = $this->api->getCollection($_POST[self::$ParentCollection]);
+                $_SESSION["PreviousID"] = $this->api->AddCollection($_POST[self::$Collectiontoadd],$r);
+                $_SESSION["Parent"] = $r;
                 header("Location:?Reg=True");
              }
         }
