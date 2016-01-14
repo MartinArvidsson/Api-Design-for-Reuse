@@ -33,10 +33,22 @@ class Collection
     {
         return $this->ChildCollectionIDs;
     }
-    public function addChild($collectionID,$CollectionName)
+    public function addChild($collectionIDs,$CollectionNames)
     {
-        array_push($this->ChildCollectionIDs,$collectionID);
-        array_push($this->ChildCollectionNames,$CollectionName);
+        foreach($collectionIDs as $Id)
+        {
+            if(!in_array($Id,$this->ChildCollectionIDs))
+            {
+                array_push($this->ChildCollectionIDs,$Id);
+            }
+        }
+        foreach($CollectionNames as $Names)
+        {
+            if(!in_array($Names,$this->ChildCollectionNames))
+            {
+                array_push($this->ChildCollectionNames,$Names);
+            }
+        }
     }
     public function addArtifact($Artifactname)
     {

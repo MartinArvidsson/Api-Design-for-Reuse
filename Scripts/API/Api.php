@@ -29,8 +29,22 @@ class Api
         if($ParentCollection != null)
         {
             $NewChild = new Collection($this->collectionID,$CollectionName);
-            $ParentCollection->addChild($this->collectionID,$CollectionName);
+            //$ParentCollection->addChild($this->collectionID,$CollectionName);
             array_push($this->Collections,$NewChild);
+            $ParentID = $ParentCollection->getCollectionID();
+            $ParentName = $ParentCollection->getCollectionName();
+            $ChildNArray =  $ParentCollection->getChildNames();
+            $ChildIArray = $ParentCollection->getChildID();
+            array_push($ChildNArray,$CollectionName);
+            array_push($ChildIArray,$this->collectionID);
+            
+            if (($key = array_search($ParentCollection, $this->Collections)) !== false) 
+            {
+                unset($this->Collections[$key]);
+            }
+            $newParent = new Collection($ParentID,$ParentName);
+            $newParent->addChild($ChildIArray,$ChildNArray);
+            array_push($this->Collections,$newParent);
             //Pusha in updaterade parentcollection.
         }
         else 
@@ -50,15 +64,21 @@ class Api
     
     public function getCollection($IDtoval)
     {
-        foreach (self::GetCollections() as $c) 
+        if($IDtoval != null)
         {
-            if($c->getCollectionID() == $IDtoval)
+            foreach (self::GetCollections() as $c) 
             {
-              return $c;
+                if($c != null)
+                {
+                 if($c->getCollectionID() == $IDtoval)
+                    {
+                        return $c;
+                    }   
+                }
             }
+            //När den hämtas kolla att alla saker i listan med undercollections finns, annars ta bort elementet.
         }
     }
-    
     public function DeleteCollection($IDtodelete)
     {
         $this->Collections = self::GetCollections();

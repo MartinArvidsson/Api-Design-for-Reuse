@@ -75,6 +75,7 @@ class Main
             echo $_SESSION["ResponseCollection"];
             var_dump($_SESSION["Names"]);
             var_dump($_SESSION["Ids"]);
+            //var_dump($_SESSION["Parent"]);
         }
     }
     
@@ -86,7 +87,6 @@ class Main
              {
                 $r = $this->api->getCollection($_POST[self::$ParentCollection]);
                 $_SESSION["PreviousID"] = $this->api->AddCollection($_POST[self::$Collectiontoadd],$r);
-                $_SESSION["Parent"] = $r;
                 header("Location:?Reg=True");
              }
         }
@@ -100,18 +100,18 @@ class Main
             {
                 $r = $this->api->getCollection($_POST[self::$Collectiontofind]);
                 
-                $_SESSION["Names"] = $r->getChildNames();
-                $_SESSION["Ids"] = $r->getChildID();
+                 $_SESSION["Names"] = $r->getChildNames();
+                 $_SESSION["Ids"] = $r->getChildID();
                 
-                foreach($r->getChildNames() as $names)
-                {
-                    $this->Childnames .= $names;
-                }
+                 foreach($r->getChildNames() as $names)
+                 {
+                     $this->Childnames .= $names.', ';
+                 }
                 
-                foreach($r->getChildID() as $ids)
-                {
-                    $this->ChildIds .= $ids;   
-                }
+                 foreach($r->getChildID() as $ids)
+                 {
+                     $this->ChildIds .= $ids.', ';   
+                 }
                 
                 $_SESSION["ResponseCollection"] = 
                 'Name: '.$r->getCollectionName().'<br> 
