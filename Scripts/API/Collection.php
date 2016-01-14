@@ -2,18 +2,18 @@
 class Collection
 {
     private $collectionID;
-    private $CollectionName;
+    //private $CollectionName;
     private $ParentCollection;
-    private $ChildCollectionNames = array();
+    //private $ChildCollectionNames = array();
     private $ChildCollectionIDs = array();
     private $Arifacts = array();
     private $todelete;
     //$CollectionName
-    
-    public function __construct($collectionID,$CollectionName)
+    //,$CollectionName
+    public function __construct($collectionID)
     {
         $this->collectionID = $collectionID;
-        $this->CollectionName = $CollectionName;
+        //$this->CollectionName = $CollectionName;
     }
     
     public function getCollectionID()
@@ -21,19 +21,20 @@ class Collection
         return $this->collectionID;
     }
     
-    public function getCollectionName()
-    {
-        return $this->CollectionName;
-    }
-    public function getChildNames()
-    {
-        return $this->ChildCollectionNames;
-    }
+    // public function getCollectionName()
+    // {
+    //     return $this->CollectionName;
+    // }
+    // public function getChildNames()
+    // {
+    //     return $this->ChildCollectionNames;
+    // }
     public function getChildIDs()
     {
         return $this->ChildCollectionIDs;
     }
-    public function addChild($collectionIDs,$CollectionNames)
+    //,$CollectionNames
+    public function addChild($collectionIDs)
     {
         foreach($collectionIDs as $Id)
         {
@@ -42,13 +43,13 @@ class Collection
                 array_push($this->ChildCollectionIDs,$Id);
             }
         }
-        foreach($CollectionNames as $Names)
-        {
-            if(!in_array($Names,$this->ChildCollectionNames))
-            {
-                array_push($this->ChildCollectionNames,$Names);
-            }
-        }
+        // foreach($CollectionNames as $Names)
+        // {
+        //     if(!in_array($Names,$this->ChildCollectionNames))
+        //     {
+        //         array_push($this->ChildCollectionNames,$Names);
+        //     }
+        // }
     }
     public function addArtifact($Artifactname)
     {

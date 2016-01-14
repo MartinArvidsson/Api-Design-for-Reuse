@@ -28,7 +28,7 @@ class Main
         $message = $this->api->geterror();
         $this->generateHTML($message);
     }
-    
+    //    	     <input type="text" id="'.self::$Collectiontoadd.'"  name="'.self::$Collectiontoadd.'"/>
     private function generateHTML($message)
     {
         $uri = $_SERVER["REQUEST_URI"];
@@ -38,7 +38,6 @@ class Main
              <p>Add Collection</p>             
              <form action="'.$this->addCollection().'"method="post" >
              <p>Name of collection</p>
-    	   	 <input type="text" id="'.self::$Collectiontoadd.'"  name="'.self::$Collectiontoadd.'"/> 
     	   	 <br>
     	   	 <p>Parentcollection(Not needed)</p>
     	   	 <input type="text" id="'.self::$ParentCollection.'" name="'.self::$ParentCollection.'"/> 
@@ -77,10 +76,12 @@ class Main
     {
         if(isset($_POST[self::$Registerbutton]))
         {
-             if(isset($_POST[self::$Collectiontoadd]) && isset($_POST[self::$ParentCollection]))
+            //isset($_POST[self::$Collectiontoadd]) && 
+             if(isset($_POST[self::$ParentCollection]))
              {
                 $r = $this->api->getCollection($_POST[self::$ParentCollection]);
-                $_SESSION["PreviousID"] = $this->api->AddCollection($_POST[self::$Collectiontoadd],$r);
+                //$_POST[self::$Collectiontoadd],
+                $_SESSION["PreviousID"] = $this->api->AddCollection($r);
                 header("Location:?Reg=True");
              }
         }
@@ -94,10 +95,10 @@ class Main
             {
                 $r = $this->api->getCollection($_POST[self::$Collectiontofind]);
                 
-                 foreach($r->getChildNames() as $names)
-                 {
-                     $this->Childnames .= $names.', ';
-                 }
+                //  foreach($r->getChildNames() as $names)
+                //  {
+                //      $this->Childnames .= $names.', ';
+                //  }
                 
                  foreach($r->getChildIDs() as $ids)
                  {
@@ -105,9 +106,7 @@ class Main
                  }
                 
                 $_SESSION["ResponseCollection"] = 
-                'Name: '.$r->getCollectionName().'<br> 
-                 Id: '.$r->getCollectionID().'<br>
-                 ChildNames:'.$this->Childnames.'<br>
+                 'Id: '.$r->getCollectionID().'<br>
                  ChildIDs:'.$this->ChildIds;
                 
                 header("Location:?Search=True");

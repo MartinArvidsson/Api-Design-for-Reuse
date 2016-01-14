@@ -12,7 +12,8 @@ class Api
     private $todelete;
     //$CollectionName
 
-    public function AddCollection($CollectionName,$ParentCollection)
+    //$CollectionName,
+    public function AddCollection($ParentCollection)
     {
         $this->Collections = self::GetCollections();
         if($this->Collections == false)
@@ -28,28 +29,32 @@ class Api
         }
         if($ParentCollection != null)
         {
-            $NewChild = new Collection($this->collectionID,$CollectionName);
+            //,$CollectionName
+            $NewChild = new Collection($this->collectionID);
             //$ParentCollection->addChild($this->collectionID,$CollectionName);
             array_push($this->Collections,$NewChild);
             $ParentID = $ParentCollection->getCollectionID();
-            $ParentName = $ParentCollection->getCollectionName();
-            $ChildNArray =  $ParentCollection->getChildNames();
+            //$ParentName = $ParentCollection->getCollectionName();
+            //$ChildNArray =  $ParentCollection->getChildNames();
             $ChildIArray = $ParentCollection->getChildIDs();
-            array_push($ChildNArray,$CollectionName);
+            //array_push($ChildNArray,$CollectionName);
             array_push($ChildIArray,$this->collectionID);
             
             if (($key = array_search($ParentCollection, $this->Collections)) !== false) 
             {
                 unset($this->Collections[$key]);
             }
-            $newParent = new Collection($ParentID,$ParentName);
-            $newParent->addChild($ChildIArray,$ChildNArray);
+            //,$ParentName
+            $newParent = new Collection($ParentID);
+            //,$ChildNArray
+            $newParent->addChild($ChildIArray);
             array_push($this->Collections,$newParent);
             //Pusha in updaterade parentcollection.
         }
         else 
         {
-            array_push($this->Collections,new Collection($this->collectionID,$CollectionName));   
+            //,$CollectionName
+            array_push($this->Collections,new Collection($this->collectionID));   
         }
         
         $this->serialized = serialize($this->Collections);
@@ -74,16 +79,21 @@ class Api
                     {
                         $ParentID = $c->getCollectionID();
                         $childarray = $c->getChildIDs();
-                        $childnames = $c->getChildNames();
-                        $ParentName = $c->getCollectionName();
+                        //$childnames = $c->getChildNames();
+                        //$ParentName = $c->getCollectionName();
                         foreach ($childarray as $ids) 
                         {
                             // code...
-                             if (array_search($ids,self::GetCollections()) == false) 
+                            if (array_search($ids,self::GetCollections()) == false) 
                             {
                                 unset($childarray[$ids]);
                             }
                         }
+                        $newParent = new Collection($ParentID);
+                        $newParent->addChild($childarray);
+                        array_push($this->Collections,$newParent);
+                        
+                        return $newParent;
                     }   
                 }
             }
