@@ -29,7 +29,7 @@ class Collection
     {
         return $this->ChildCollectionNames;
     }
-    public function getChildID()
+    public function getChildIDs()
     {
         return $this->ChildCollectionIDs;
     }

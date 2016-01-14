@@ -34,7 +34,7 @@ class Api
             $ParentID = $ParentCollection->getCollectionID();
             $ParentName = $ParentCollection->getCollectionName();
             $ChildNArray =  $ParentCollection->getChildNames();
-            $ChildIArray = $ParentCollection->getChildID();
+            $ChildIArray = $ParentCollection->getChildIDs();
             array_push($ChildNArray,$CollectionName);
             array_push($ChildIArray,$this->collectionID);
             
@@ -72,7 +72,18 @@ class Api
                 {
                  if($c->getCollectionID() == $IDtoval)
                     {
-                        return $c;
+                        $ParentID = $c->getCollectionID();
+                        $childarray = $c->getChildIDs();
+                        $childnames = $c->getChildNames();
+                        $ParentName = $c->getCollectionName();
+                        foreach ($childarray as $ids) 
+                        {
+                            // code...
+                             if (array_search($ids,self::GetCollections()) == false) 
+                            {
+                                unset($childarray[$ids]);
+                            }
+                        }
                     }   
                 }
             }

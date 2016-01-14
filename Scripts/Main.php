@@ -66,16 +66,10 @@ class Main
         {
             echo 'Sucess, here is the ID to search for the collection: '.$_SESSION["PreviousID"].'';
             unset($_SESSION["PreviousID"]);
-            
-            var_dump($_SESSION["Parent"]);
         }
         if (count($_uri) > 1 && $_uri[1] == "Search=True")
         {
-            //var_dump($_SESSION["ResponseCollection"]);
             echo $_SESSION["ResponseCollection"];
-            var_dump($_SESSION["Names"]);
-            var_dump($_SESSION["Ids"]);
-            //var_dump($_SESSION["Parent"]);
         }
     }
     
@@ -100,15 +94,12 @@ class Main
             {
                 $r = $this->api->getCollection($_POST[self::$Collectiontofind]);
                 
-                 $_SESSION["Names"] = $r->getChildNames();
-                 $_SESSION["Ids"] = $r->getChildID();
-                
                  foreach($r->getChildNames() as $names)
                  {
                      $this->Childnames .= $names.', ';
                  }
                 
-                 foreach($r->getChildID() as $ids)
+                 foreach($r->getChildIDs() as $ids)
                  {
                      $this->ChildIds .= $ids.', ';   
                  }
