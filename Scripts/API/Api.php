@@ -15,6 +15,10 @@ class Api
     public function AddCollection($CollectionName,$ParentCollection)
     {
         $this->Collections = self::GetCollections();
+        if($this->Collections == false)
+        {
+            $this->Collections = array();
+        }
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -22,17 +26,10 @@ class Api
         {
             $this->collectionID .= $characters[rand(0, $charactersLength - 1)];
         }
-        
-        if($this->Collections == false)
-        {
-            $this->Collections = array();
-        }
-        
         if($ParentCollection != "")
         {
-            $c = self::getCollection($ParentCollection);
-            var_dump($c);
             $NewChild = new Collection($this->collectionID,$CollectionName);
+            $c = self::getCollection($ParentCollection);
             $c->addChild($this->collectionID,$CollectionName);
             array_push($this->Collections,$NewChild);   
             
@@ -74,6 +71,7 @@ class Api
             if($c->getCollectionID() == $IDtodelete)
             {
                 $this->todelete = $c;
+                //Hämta alla undercollections, lägg i array, kör array_Search genom hela den arrayen också för att ta bort undercolelctions...
             }
         }
         if (($key = array_search($this->todelete, $this->Collections)) !== false) 

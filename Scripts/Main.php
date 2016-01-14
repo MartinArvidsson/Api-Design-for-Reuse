@@ -16,6 +16,8 @@ class Main
     private $cName;
     private $cID;
     private $cParent;
+    private $Childnames;
+    private $ChildIds;
     public function __construct()
     {
         $this->api = new Api();
@@ -64,11 +66,14 @@ class Main
         {
             echo 'Sucess, here is the ID to search for the collection: '.$_SESSION["PreviousID"].'';
             unset($_SESSION["PreviousID"]);
+            var_dump($_SESSION["Parent"]);
         }
         if (count($_uri) > 1 && $_uri[1] == "Search=True")
         {
             //var_dump($_SESSION["ResponseCollection"]);
             echo $_SESSION["ResponseCollection"];
+            var_dump($_SESSION["Names"]);
+            var_dump($_SESSION["Ids"]);
         }
     }
     
@@ -80,6 +85,7 @@ class Main
              {
                 
                 $_SESSION["PreviousID"] = $this->api->AddCollection($_POST[self::$Collectiontoadd],$_POST[self::$ParentCollection]);
+                $_SESSION["Parent"] = $_POST[self::$ParentCollection];
                 header("Location:?Reg=True");
              }
         }
@@ -93,11 +99,24 @@ class Main
             {
                 $r = $this->api->getCollection($_POST[self::$Collectiontofind]);
                 
+                $_SESSION["Names"] = $r->getChildNames();
+                $_SESSION["Ids"] = $r->getChildID();
+                
+                foreach($r->getChildNames() as $names)
+                {
+                    $this->Childnames .= $names;
+                }
+                
+                foreach($r->getChildID() as $ids)
+                {
+                    $this->ChildIds .= $ids;   
+                }
+                
                 $_SESSION["ResponseCollection"] = 
                 'Name: '.$r->getCollectionName().'<br> 
                  Id: '.$r->getCollectionID().'<br>
-                 ChildNames:'.$r->getChildNames().'<br>
-                 ChildIDs:'.$r->getChildID();
+                 ChildNames:'.$this->Childnames.'<br>
+                 ChildIDs:'.$this->ChildIds;
                 
                 header("Location:?Search=True");
             }
