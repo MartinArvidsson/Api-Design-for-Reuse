@@ -175,8 +175,8 @@ class Main
                  }
                  foreach($_artifacts as $art)
                  {
-                     $name = basename($art);
-                     $totalartifacts .= "<a href='$art'>$name</a> , ";
+                     $name = Api::$Artifactpath.$art;
+                     $totalartifacts .= "<a href='$name'>$art</a> , ";
                  }
                  
                  foreach($_artifacts as $_art)

@@ -4,7 +4,7 @@ require_once("Collection.php");
 class Api
 {
     private static $Collectionpath = "../Collections/Collections.bin";
-    private static $Artifactpath = "../Artifacts/";
+    public static $Artifactpath = "../Artifacts/";
     private $Collections = array();
     private $serialized;
     private $collectionID;
@@ -100,7 +100,7 @@ class Api
             $collection = $this->getCollection($CollectionID);
             if($Artifact["name"] != "")
             {
-                $collection->addArtifact(self::$Artifactpath.$Artifact["name"]);
+                $collection->addArtifact($Artifact["name"]);
                 move_uploaded_file($Artifact["tmp_name"],self::$Artifactpath.$Artifact["name"]);
                 
                 $this->serialized = serialize($this->Collections);
@@ -120,29 +120,28 @@ class Api
     public function DeleteArtifact($ArtifactID)
     {
         //unlink image
-        $Artifacttoremove;
+        $Artifacttoremove = array();
             if($ArtifactID != "")
             {
                 foreach($this->Collections as $c) 
                 {
-                    foreach($c->getArtifacts() as $a)
+                    $ca = $c->getArtifacts();
+                    
+                    if(isset($ca[$ArtifactID]))
                     {
-                        
-                        if(isset($a[$ArtifactID]))
-                        {
-                            $Artifacttoremove[$ArtifactID] =  $ArtifactID;
-                        }
+                        $c->removeArtifact($ArtifactID);
                     }
-                    unset($c->getArtifacts(),$Artifacttoremove);
+                    
+                    $this->serialized = serialize($this->Collections);
+                    file_put_contents(self::$Collectionpath, $this->serialized);
+                    
                 }
-                unlink($ArtifactID);
                 
-                $this->serialized = serialize($this->Collections);
-                file_put_contents(self::$Collectionpath, $this->serialized);
+                unlink(self::$Artifactpath.$ArtifactID);
             }
             else
             {
-                 throw new Exception("File has no name");
+                 throw new Exception("File not found on server!");
             }
     }
 }

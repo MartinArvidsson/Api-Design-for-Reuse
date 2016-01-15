@@ -33,6 +33,11 @@ class Collection
         return $this->Artifacts;
     }
     
+    public function removeArtifact($aid)
+    {
+        unset($this->Artifacts[$aid]);
+    }
+    
     public function AddChild($child)
     {
         $childId = $child->getCollectionID();
@@ -45,10 +50,5 @@ class Collection
     public function addArtifact($Artifactpath)
     {
         $this->Artifacts[$Artifactpath] = $Artifactpath;
-    }
-    
-    public function removeArtifact($Artifactname)
-    {
-        
     }
 }
