@@ -30,7 +30,7 @@ class Collection
     
     public function getArtifacts()
     {
-        
+        return $this->Artifacts;
     }
     
     public function AddChild($child)
@@ -42,16 +42,9 @@ class Collection
         }
         
     }
-    public function addArtifact($ArtifactName)
+    public function addArtifact($Artifactpath)
     {
-        if(!isset($this->Artifacts[$ArtifactName]))
-        {
-            $this->Artifacts[$ArtifactName] = $ArtifactName;
-        }
-        else
-        {
-            throw new exception("Artifact already exist");
-        }
+        $this->Artifacts[$Artifactpath] = $Artifactpath;
     }
     
     public function removeArtifact($Artifactname)

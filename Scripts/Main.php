@@ -6,15 +6,17 @@ class Main
     private static $Searchbutton = 'Main::Find';
     private static $Deletebutton = 'Main::Delete';
     private static $ArtifactSubmitbutton = 'Main::CreateArtifact';
+    private static $RemoveArtifactbutton = 'Main::RemoveArtifactbutton';
     
     private static $NewArtifact = 'Main::NewArtifact';
-    //private static $DeleteArtifact = 'Main::DeleteArtifact';
+    private static $DeleteArtifact = 'Main::DeleteArtifact';
     private static $UpdateArtifact = 'Main::UpdateArtifact';
     
     private static $AddCollection = "AddCollection";
     private static $FindCollection = "FindCollection";
     private static $DeleteCollection = "DeleteCollection";
     private static $AddArtifact = 'AddArtifact';
+    private static $RemoveArtifact = 'RemoveArtifact';
     
     private static $Collectiontoadd = 'Main::NewCollection';
     private static $Collectiontofind = 'Main::Collectiontofind';
@@ -23,8 +25,7 @@ class Main
     
     private static $DestinationCollection = 'Main::DestinationCollection';
     private static $UpdateCollectionArtifact = 'Main:UpdateCollectionArtifact';
-    private static $Artifacttoupdate = 'Main::Artifacttoupdate';
-    //private static $Artifacttodelete = 'Main::Artifacttodelete';
+
     
     private $CollectionID;
     private $message;
@@ -59,6 +60,9 @@ class Main
                     break;
                 case self::$AddArtifact:
                     $this->addArtifact();
+                    break;
+                case self::$RemoveArtifact:
+                    $this->removeArtifact();
                     break;
             }
         }
@@ -101,17 +105,16 @@ class Main
              <input type="submit" name="'.self::$ArtifactSubmitbutton.'" value="Upload Artifact"">
              </form>
              
-             <h2>Update Artifact</h2>
+             <h2>remove Artifact</h2>
+             <form action="?ACTION='.self::$RemoveArtifact.'"method="post" >
+             <p>ID of Artifact</p>
+    	   	 <input type="text" id="'.self::$DeleteArtifact.'"  name="'.self::$DeleteArtifact.'"/> 
+    	   	 <br>
+    	   	 <input type="submit" name="'.self::$RemoveArtifactbutton.'" value="Delete" />
+    	   	 </form>
              
              
         ';
-        // <form action="'.$this->updateArtifact().'" method="post" enctype="multipart/form-data">
-        //      Select image to upload:
-        //      <input type="file" name="'.self::$Artifacttoupdate.'" id="'.self::$Artifacttoupdate.'"><br>
-        //      Select Collection:
-        //      <input type="text" id="'.self::$UpdateCollectionArtifact.'"  name="'.self::$UpdateCollectionArtifact.'"/>
-        //      <input type="submit" value="Upload Image" name="'.self::$UpdateArtifact.'">
-        //      </form>
         if (count($_uri) > 1 && $_uri[1] == "Reg=True")
         {
             echo 'Sucess, here is the ID to search for the collection: '.$_SESSION["PreviousID"].'';
@@ -160,18 +163,33 @@ class Main
                 
                  $childnames = "";
                  $childIds = "";
+                 $totalartifacts = "";
+                 $removeartifact = "";
                  $childs = $r->getChilds();
+                 $_artifacts = $r->getArtifacts();
                  
                  foreach($childs as $child)
                  {
                      $childnames .= $child->getCollectionName().', ';
                      $childIds .= $child->getCollectionID().', ';
                  }
+                 foreach($_artifacts as $art)
+                 {
+                     $name = basename($art);
+                     $totalartifacts .= "<a href='$art'>$name</a> , ";
+                 }
+                 
+                 foreach($_artifacts as $_art)
+                 {
+                     $removeartifact .= $_art.', ';
+                 }
                 
                 $_SESSION["ResponseCollection"] = 
                  'Id: '.$r->getCollectionID().'<br>'
                  .'ChildIDs: '.$childIds.'<br>'
-                 .'Childnames: '.$childnames;
+                 .'Childnames: '.$childnames.'<br>'
+                 .'Artifacts: '.$totalartifacts.'<br>'
+                 .'artifact id use it to remove artifact: '.$removeartifact;
                 
                 header("Location:?Search=True");
             }
@@ -206,18 +224,13 @@ class Main
         }
     }
     
-     //private function updateArtifact()
-    // {
-     //    if(isset($_POST[self::$UpdateArtifact]))
-     //    {
-    //         if($_POST[self::$Artifacttoupdate])
-    //         {
-    //             if($_POST[self::$UpdateCollectionArtifact] != "")
-    //             {
-    //                 $this->api->UpdateArtifact($_POST[self::$Artifacttoupdate],$_POST[self::$UpdateCollectionArtifact]);
-    //                 header("Location:?ArtifactAdded=True");   
-    //             }
-    //         }
-    //     }
-    // }
+    private function removeArtifact()
+    {
+        if(isset($_POST[self::$RemoveArtifactbutton]))
+        {
+            $this->api->DeleteArtifact($_POST[self::$DeleteArtifact]);
+            header("Location:?ArtifactDeleted=True");   
+        }
+    }
+
 }

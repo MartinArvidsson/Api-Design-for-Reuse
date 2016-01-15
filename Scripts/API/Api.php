@@ -100,8 +100,11 @@ class Api
             $collection = $this->getCollection($CollectionID);
             if($Artifact["name"] != "")
             {
-                $collection->addArtifact($Artifact['name']);
-                move_uploaded_file($Artifact,self::$Artifactpath);
+                $collection->addArtifact(self::$Artifactpath.$Artifact["name"]);
+                move_uploaded_file($Artifact["tmp_name"],self::$Artifactpath.$Artifact["name"]);
+                
+                $this->serialized = serialize($this->Collections);
+                file_put_contents(self::$Collectionpath, $this->serialized);
             }
             else
             {
@@ -114,29 +117,32 @@ class Api
         }
     }
     
-    public function UpdateArtifact($CollectionID,$Artifact)
+    public function DeleteArtifact($ArtifactID)
     {
-        if (isset($this->Collections[$CollectionID]))
-        {
-            $collection = $this->getCollection($CollectionID);
-            if($Artifact["name"] != "")
+        //unlink image
+        $Artifacttoremove;
+            if($ArtifactID != "")
             {
-                $artifacts = $collection->getArtifacts();
-                if(isset($artifacts[$Artifact["name"]]))
+                foreach($this->Collections as $c) 
                 {
-                    $collection->addArtifact($Artifact['name']);
-                    move_uploaded_file($Artifact, self::$Artifactpath);  
+                    foreach($c->getArtifacts() as $a)
+                    {
+                        
+                        if(isset($a[$ArtifactID]))
+                        {
+                            $Artifacttoremove[$ArtifactID] =  $ArtifactID;
+                        }
+                    }
+                    unset($c->getArtifacts(),$Artifacttoremove);
                 }
+                unlink($ArtifactID);
+                
+                $this->serialized = serialize($this->Collections);
+                file_put_contents(self::$Collectionpath, $this->serialized);
             }
-            // else
-            // {
-            //     throw new Exception("No file has that name");
-            // }
-        }
-    }
-    
-    public function DeleteArtifact($CollectionID,$Artifact)
-    {
-        
+            else
+            {
+                 throw new Exception("File has no name");
+            }
     }
 }
