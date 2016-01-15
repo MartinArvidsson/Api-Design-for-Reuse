@@ -4,7 +4,7 @@ require_once("Collection.php");
 class Api
 {
     private static $Collectionpath = "../Collections/Collections.bin";
-    private $Artifactpath = "../Artifacts";
+    private static $Artifactpath = "../Artifacts/";
     private $Collections = array();
     private $serialized;
     private $collectionID;
@@ -55,6 +55,7 @@ class Api
         return unserialize(file_get_contents(self::$Collectionpath));
     }
     
+    
     public function getCollection($Id)
     {
         if (isset($this->Collections[$Id]))
@@ -72,6 +73,10 @@ class Api
         if (isset($this->Collections[$collectionID]))
         {
             $this->_deleteCollection($this->Collections[$collectionID]);
+        }
+        else
+        {
+            throw new exception("Not a valid ID");
         }
         
         $this->serialized = serialize($this->Collections);
@@ -92,14 +97,16 @@ class Api
     {
         if (isset($this->Collections[$CollectionID]))
         {
-            var_dump($Artifact);
-            die();
-            //Hantera fil
-            //Spara objectet i Artifacts.
-            //Spara namnet på Collectionen.
-            //Lägg till på Collectionobjectet.
             $collection = $this->getCollection($CollectionID);
-            $collection->addArtifact($Artifact);
+            if($Artifact["name"] != "")
+            {
+                $collection->addArtifact($Artifact['name']);
+                move_uploaded_file($Artifact,self::$Artifactpath);
+            }
+            else
+            {
+                 throw new Exception("File has no name");
+            }
         }
         else
         {
@@ -109,7 +116,23 @@ class Api
     
     public function UpdateArtifact($CollectionID,$Artifact)
     {
-        
+        if (isset($this->Collections[$CollectionID]))
+        {
+            $collection = $this->getCollection($CollectionID);
+            if($Artifact["name"] != "")
+            {
+                $artifacts = $collection->getArtifacts();
+                if(isset($artifacts[$Artifact["name"]]))
+                {
+                    $collection->addArtifact($Artifact['name']);
+                    move_uploaded_file($Artifact, self::$Artifactpath);  
+                }
+            }
+            // else
+            // {
+            //     throw new Exception("No file has that name");
+            // }
+        }
     }
     
     public function DeleteArtifact($CollectionID,$Artifact)

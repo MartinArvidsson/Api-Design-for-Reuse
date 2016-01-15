@@ -3,17 +3,15 @@ class Collection
 {
     private $collectionID;
     private $CollectionName;
-    private $ArtifactName;
     private $ParentCollection;
     private $ChildCollection = array();
-    private $Arifacts = array();
+    private $Artifacts = array();
     private $todelete;
     
-    public function __construct($name, $collectionID, $artifactName)
+    public function __construct($name, $collectionID)
     {
         $this->collectionID = $collectionID;
         $this->CollectionName = $name;
-        $this->ArtifactName = $artifactName;
     }
     public function getCollectionName()
     {
@@ -32,7 +30,7 @@ class Collection
     
     public function getArtifacts()
     {
-        return $this->ArtifactName;
+        
     }
     
     public function AddChild($child)
@@ -44,29 +42,20 @@ class Collection
         }
         
     }
-    public function addArtifact($artifactName)
+    public function addArtifact($ArtifactName)
     {
-        $artifactId = $Artifactname->getArtifacts();
-        if(!isset($this->ArtifactName[$artifactId] = $artifactName))
-    }
-    
-    private function getArtifacts()
-    {
-        return $this->Artifacts();
+        if(!isset($this->Artifacts[$ArtifactName]))
+        {
+            $this->Artifacts[$ArtifactName] = $ArtifactName;
+        }
+        else
+        {
+            throw new exception("Artifact already exist");
+        }
     }
     
     public function removeArtifact($Artifactname)
     {
-        foreach (self::getArtifacts() as $art) 
-        {
-            if($Artifactname == $art)
-            {
-                $this->todelete = $art;
-            }
-        }
-        if (($key = array_search($this->todelete, self::getArtifacts())) !== false) 
-        {
-            unset($this->Artifacts[$key]);
-        }
+        
     }
 }

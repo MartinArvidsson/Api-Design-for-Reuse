@@ -5,7 +5,7 @@ class Main
     private static $Registerbutton = 'Main::Search';
     private static $Searchbutton = 'Main::Find';
     private static $Deletebutton = 'Main::Delete';
-    private static $ArtifactSubmitbutton = 'Main::AddArtifact';
+    private static $ArtifactSubmitbutton = 'Main::CreateArtifact';
     
     private static $NewArtifact = 'Main::NewArtifact';
     //private static $DeleteArtifact = 'Main::DeleteArtifact';
@@ -98,7 +98,7 @@ class Main
              <input type="file" name="'.self::$NewArtifact.'" id="'.self::$NewArtifact.'"><br>
              Select Collection:
              <input type="text" id="'.self::$DestinationCollection.'"  name="'.self::$DestinationCollection.'"/>
-             <input type="submit" name="'.self::$ArtifactSubmitbutton.' value="Upload Artifact"">
+             <input type="submit" name="'.self::$ArtifactSubmitbutton.'" value="Upload Artifact"">
              </form>
              
              <h2>Update Artifact</h2>
@@ -195,21 +195,21 @@ class Main
     {
         if(isset($_POST[self::$ArtifactSubmitbutton]))
         {
-            if($_FILES[self::$NewArtifact])
-            {
-                if($_POST[self::$DestinationCollection])
-                {
+            // if($_FILES[self::$NewArtifact])
+            // {
+            //     if($_POST[self::$DestinationCollection])
+            //     {
                     $this->api->AddArtifact($_POST[self::$DestinationCollection],$_FILES[self::$NewArtifact]);
                     header("Location:?ArtifactAdded=True");   
-                }
-            }
+            //     }
+            // }
         }
     }
     
-    // private function updateArtifact()
+     //private function updateArtifact()
     // {
-    //     if(isset($_POST[self::$UpdateArtifact]))
-    //     {
+     //    if(isset($_POST[self::$UpdateArtifact]))
+     //    {
     //         if($_POST[self::$Artifacttoupdate])
     //         {
     //             if($_POST[self::$UpdateCollectionArtifact] != "")
