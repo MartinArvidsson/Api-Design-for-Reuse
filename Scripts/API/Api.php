@@ -6,8 +6,7 @@ class Api
     private static $Collectionpath = "../Collections/Collections.bin";
     private $Artifactpath = "../Artifacts";
     private $Collections = array();
-    private $serialized;    
-    private $errormessage;
+    private $serialized;
     private $collectionID;
     private $todelete;
     //$CollectionName
@@ -109,7 +108,12 @@ class Api
             if($c->getCollectionID() == $IDtodelete)
             {
                 $this->todelete = $c;
-                //Hämta alla undercollections, lägg i array, kör array_Search genom hela den arrayen också för att ta bort undercolelctions...
+            }
+        }
+        foreach ($this->todelete->getChildIDs() as $childs) {
+            if (($key = array_search($childs, $this->todelete->getChildIDs())) !== false) 
+            {
+                unset($this->Collections[$key]);
             }
         }
         if (($key = array_search($this->todelete, $this->Collections)) !== false) 
@@ -121,23 +125,18 @@ class Api
         file_put_contents(self::$Collectionpath, $this->serialized);
     }
     
-    public function AddArtifact()
+    public function AddArtifact($Artifact,$CollectionID)
     {
         
     }
     
-    public function UpdateArtifact()
+    public function UpdateArtifact($Artifact,$CollectionID)
     {
         
     }
     
-    public function DeleteArtifact()
+    public function DeleteArtifact($Artifact,$CollectionID)
     {
         
-    }
-    
-    public function geterror()
-    {
-        return $this->errormessage;
     }
 }

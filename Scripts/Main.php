@@ -6,10 +6,21 @@ class Main
     private static $Searchbutton = 'Main::Find';
     private static $Deletebutton = 'Main::Delete';
     
+    private static $AddArtifact = 'Main::AddArtifact';
+    private static $DeleteArtifact = 'Main::DeleteArtifact';
+    private static $UpdateArtifact = 'Main::UpdateArtifact';
+    
+    
     private static $Collectiontoadd = 'Main::NewCollection';
     private static $Collectiontofind = 'Main::Collectiontofind';
     private static $Collectiontodelete = 'Main::Collectiontodelete';
     private static $ParentCollection = 'Main::ParentCollection';
+    
+    private static $Artifacttoadd = 'Main::NewArtifact';
+    private static $ArtifactinCollection = 'Main::ArtifactinCollection';
+    private static $UpdateCollectionArtifact = 'Main:UpdateCollectionArtifact';
+    private static $Artifacttoupdate = 'Main::Artifacttoupdate';
+    private static $Artifacttodelete = 'Main::Artifacttodelete';
     
     private $CollectionID;
     private $message;
@@ -41,7 +52,7 @@ class Main
     	   	 <br>
     	   	 <p>Parentcollection(Not needed)</p>
     	   	 <input type="text" id="'.self::$ParentCollection.'" name="'.self::$ParentCollection.'"/> 
-    	   	 <input type="submit" name="'.self::$Registerbutton.'" value="Add" />
+    	   	 <input type="submit" name="'.self::$Registerbutton.'" id="ReigsterButton" value="Add" />
     	   	 </form>
     	   	 
     	   	 <p>Collection to find</p>
@@ -59,17 +70,46 @@ class Main
     	   	 <br>
     	   	 <input type="submit" name="'.self::$Deletebutton.'" value="Delete" />
     	   	 </form>
+    	   	 
+    	   	 <form action="'.$this->addArtifact().'" method="post" enctype="multipart/form-data">
+             Select image to upload:
+             <input type="file" name="'.self::$Artifacttoadd.'" id="'.self::$Artifacttoadd.'">
+             Select Collection:
+             <input type="text" id="'.self::$ArtifactinCollection.'"  name="'.self::$ArtifactinCollection.'"/>
+             <input type="submit" value="Upload Image" name="'.self::$AddArtifact.'">
+             </form>
+             
+             <form action="'.$this->updateArtifact().'" method="post" enctype="multipart/form-data">
+             Select image to upload:
+             <input type="file" name="'.self::$Artifacttoupdate.'" id="'.self::$Artifacttoupdate.'">
+             Select Collection:
+             <input type="text" id="'.self::$UpdateCollectionArtifact.'"  name="'.self::$UpdateCollectionArtifact.'"/>
+             <input type="submit" value="Upload Image" name="'.self::$UpdateArtifact.'">
+             </form>
+             
         ';
         
         if (count($_uri) > 1 && $_uri[1] == "Reg=True")
         {
             echo 'Sucess, here is the ID to search for the collection: '.$_SESSION["PreviousID"].'';
-            unset($_SESSION["PreviousID"]);
         }
         if (count($_uri) > 1 && $_uri[1] == "Search=True")
         {
             echo $_SESSION["ResponseCollection"];
         }
+        if (count($_uri) > 1 && $_uri[1] == "ArtifactAdded=True")
+        {
+            echo "Artifact Added";
+        }
+        if (count($_uri) > 1 && $_uri[1] == "ArtifactUpdated=True")
+        {
+            echo "Artifact Updated";
+        }
+        if (count($_uri) > 1 && $_uri[1] == "ArtifactDeleted=True")
+        {
+            echo "Artifact Deleted";
+        }
+        
     }
     
     private function addCollection()
@@ -116,13 +156,43 @@ class Main
     
     private function deleteCollection()
     {
-        if(isset($_POST[self::$Deletebutton]))
+        if(isset($_POST[self::$AddArtifact]))
         {
             if($_POST[self::$Collectiontodelete])
             {
                 $this->api->deleteCollection($_POST[self::$Collectiontodelete]);
                 
                 header("Location:?Delete=True");
+            }
+        }
+    }
+    
+    private function addArtifact()
+    {
+        if(isset($_POST[self::$AddArtifact]))
+        {
+            if($_POST[self::$Artifacttoadd])
+            {
+                if($_POST[self::$ArtifactinCollection] != "")
+                {
+                    $this->api->AddArtifact($_POST[self::$Artifacttoadd],$_POST[self::$ArtifactinCollection]);
+                    header("Location:?ArtifactAdded=True");   
+                }
+            }
+        }
+    }
+    
+    private function updateArtifact()
+    {
+        if(isset($_POST[self::$UpdateArtifact]))
+        {
+            if($_POST[self::$Artifacttoupdate])
+            {
+                if($_POST[self::$UpdateCollectionArtifact] != "")
+                {
+                    $this->api->UpdateArtifact($_POST[self::$Artifacttoupdate],$_POST[self::$UpdateCollectionArtifact]);
+                    header("Location:?ArtifactAdded=True");   
+                }
             }
         }
     }
