@@ -2,18 +2,22 @@
 class Collection
 {
     private $collectionID;
-    //private $CollectionName;
+    private $CollectionName;
+    private $ArtifactName;
     private $ParentCollection;
-    //private $ChildCollectionNames = array();
-    private $ChildCollectionIDs = array();
+    private $ChildCollection = array();
     private $Arifacts = array();
     private $todelete;
-    //$CollectionName
-    //,$CollectionName
-    public function __construct($collectionID)
+    
+    public function __construct($name, $collectionID, $artifactName)
     {
         $this->collectionID = $collectionID;
-        //$this->CollectionName = $CollectionName;
+        $this->CollectionName = $name;
+        $this->ArtifactName = $artifactName;
+    }
+    public function getCollectionName()
+    {
+        return $this->CollectionName;
     }
     
     public function getCollectionID()
@@ -21,40 +25,31 @@ class Collection
         return $this->collectionID;
     }
     
-    // public function getCollectionName()
-    // {
-    //     return $this->CollectionName;
-    // }
-    // public function getChildNames()
-    // {
-    //     return $this->ChildCollectionNames;
-    // }
-    public function getChildIDs()
+    public function getChilds()
     {
-        return $this->ChildCollectionIDs;
+        return $this->ChildCollection;
     }
-    //,$CollectionNames
-    public function addChild($collectionIDs)
+    
+    public function getArtifacts()
     {
-        foreach($collectionIDs as $Id)
+        return $this->ArtifactName;
+    }
+    
+    public function AddChild($child)
+    {
+        $childId = $child->getCollectionID();
+        if(!isset($this->ChildCollection[$childId]))
         {
-            if(!in_array($Id,$this->ChildCollectionIDs))
-            {
-                array_push($this->ChildCollectionIDs,$Id);
-            }
+            $this->ChildCollection[$childId] = $child;
         }
-        // foreach($CollectionNames as $Names)
-        // {
-        //     if(!in_array($Names,$this->ChildCollectionNames))
-        //     {
-        //         array_push($this->ChildCollectionNames,$Names);
-        //     }
-        // }
+        
     }
-    public function addArtifact($Artifactname)
+    public function addArtifact($artifactName)
     {
-        array_push($this->Artifacts,$Artifactname);
+        $artifactId = $Artifactname->getArtifacts();
+        if(!isset($this->ArtifactName[$artifactId] = $artifactName))
     }
+    
     private function getArtifacts()
     {
         return $this->Artifacts();

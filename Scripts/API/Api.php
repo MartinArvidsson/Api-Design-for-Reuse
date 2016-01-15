@@ -10,15 +10,20 @@ class Api
     private $collectionID;
     private $todelete;
     //$CollectionName
-
-    //$CollectionName,
-    public function AddCollection($ParentCollection)
+    
+    public function __construct()
     {
-        $this->Collections = self::GetCollections();
+        $this->Collections = $this->GetCollections();
         if($this->Collections == false)
         {
             $this->Collections = array();
         }
+    }
+    
+    //$CollectionName,
+    public function AddCollection($name, $ParentID = null)
+    {
+        
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -26,34 +31,18 @@ class Api
         {
             $this->collectionID .= $characters[rand(0, $charactersLength - 1)];
         }
-        if($ParentCollection != null)
+        if($ParentID != null)
         {
-            //,$CollectionName
-            $NewChild = new Collection($this->collectionID);
-            //$ParentCollection->addChild($this->collectionID,$CollectionName);
-            array_push($this->Collections,$NewChild);
-            $ParentID = $ParentCollection->getCollectionID();
-            //$ParentName = $ParentCollection->getCollectionName();
-            //$ChildNArray =  $ParentCollection->getChildNames();
-            $ChildIArray = $ParentCollection->getChildIDs();
-            //array_push($ChildNArray,$CollectionName);
-            array_push($ChildIArray,$this->collectionID);
-            
-            if (($key = array_search($ParentCollection, $this->Collections)) !== false) 
-            {
-                unset($this->Collections[$key]);
-            }
-            //,$ParentName
-            $newParent = new Collection($ParentID);
-            //,$ChildNArray
-            $newParent->addChild($ChildIArray);
-            array_push($this->Collections,$newParent);
-            //Pusha in updaterade parentcollection.
+            $NewChild = new Collection($name,$this->collectionID);
+            $parent = $this->getCollection($ParentID);
+            $parent->AddChild($NewChild);
+            $this->Collections[$this->collectionID] = $NewChild;
         }
         else 
         {
             //,$CollectionName
-            array_push($this->Collections,new Collection($this->collectionID));   
+            $this->Collections[$this->collectionID] = new Collection($name,$this->collectionID);
+            
         }
         
         $this->serialized = serialize($this->Collections);
@@ -66,76 +55,64 @@ class Api
         return unserialize(file_get_contents(self::$Collectionpath));
     }
     
-    public function getCollection($IDtoval)
+    public function getCollection($Id)
     {
-        if($IDtoval != null)
+        if (isset($this->Collections[$Id]))
         {
-            foreach (self::GetCollections() as $c) 
-            {
-                if($c != null)
-                {
-                 if($c->getCollectionID() == $IDtoval)
-                    {
-                        $ParentID = $c->getCollectionID();
-                        $childarray = $c->getChildIDs();
-                        //$childnames = $c->getChildNames();
-                        //$ParentName = $c->getCollectionName();
-                        foreach ($childarray as $ids) 
-                        {
-                            // code...
-                            if (array_search($ids,self::GetCollections()) == false) 
-                            {
-                                unset($childarray[$ids]);
-                            }
-                        }
-                        $newParent = new Collection($ParentID);
-                        $newParent->addChild($childarray);
-                        array_push($this->Collections,$newParent);
-                        
-                        return $newParent;
-                    }   
-                }
-            }
-            //När den hämtas kolla att alla saker i listan med undercollections finns, annars ta bort elementet.
+            return $this->Collections[$Id];
+        }
+        else
+        {
+            throw new Exception("No collection with that ID");
         }
     }
-    public function DeleteCollection($IDtodelete)
+    
+    public function DeleteCollection($collectionID)
     {
-        $this->Collections = self::GetCollections();
-        
-        foreach ($this->Collections as $c) 
+        if (isset($this->Collections[$collectionID]))
         {
-            if($c->getCollectionID() == $IDtodelete)
-            {
-                $this->todelete = $c;
-            }
-        }
-        foreach ($this->todelete->getChildIDs() as $childs) {
-            if (($key = array_search($childs, $this->todelete->getChildIDs())) !== false) 
-            {
-                unset($this->Collections[$key]);
-            }
-        }
-        if (($key = array_search($this->todelete, $this->Collections)) !== false) 
-        {
-            unset($this->Collections[$key]);
+            $this->_deleteCollection($this->Collections[$collectionID]);
         }
         
         $this->serialized = serialize($this->Collections);
         file_put_contents(self::$Collectionpath, $this->serialized);
     }
     
-    public function AddArtifact($Artifact,$CollectionID)
+    private function _deleteCollection($collection)
+    {
+        $children = $collection->getChilds();
+        foreach ($children as $child) {
+            $this->_deleteCollection($child);
+            unset($children[$child->getCollectionID()]);
+        }
+        unset($this->Collections[$collection->getCollectionID()]);
+    }
+    
+    public function AddArtifact($CollectionID, $Artifact)
+    {
+        if (isset($this->Collections[$CollectionID]))
+        {
+            var_dump($Artifact);
+            die();
+            //Hantera fil
+            //Spara objectet i Artifacts.
+            //Spara namnet på Collectionen.
+            //Lägg till på Collectionobjectet.
+            $collection = $this->getCollection($CollectionID);
+            $collection->addArtifact($Artifact);
+        }
+        else
+        {
+            throw new Exception("No collection with that ID");
+        }
+    }
+    
+    public function UpdateArtifact($CollectionID,$Artifact)
     {
         
     }
     
-    public function UpdateArtifact($Artifact,$CollectionID)
-    {
-        
-    }
-    
-    public function DeleteArtifact($Artifact,$CollectionID)
+    public function DeleteArtifact($CollectionID,$Artifact)
     {
         
     }
