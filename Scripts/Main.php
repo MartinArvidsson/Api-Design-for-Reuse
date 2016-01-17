@@ -123,6 +123,10 @@ class Main
         {
             echo $_SESSION["ResponseCollection"];
         }
+        if (count($_uri) > 1 && $_uri[1] == "Delete=True")
+        {
+            echo "Collection Deleted";
+        }
         if (count($_uri) > 1 && $_uri[1] == "ArtifactAdded=True")
         {
             echo "Artifact Added";
@@ -204,7 +208,6 @@ class Main
             {
                 $this->api->DeleteCollection($_POST[self::$Collectiontodelete]);
                 header("Location:?Delete=True");
-                die();
             }
         }
     }
@@ -213,14 +216,9 @@ class Main
     {
         if(isset($_POST[self::$ArtifactSubmitbutton]))
         {
-            // if($_FILES[self::$NewArtifact])
-            // {
-            //     if($_POST[self::$DestinationCollection])
-            //     {
-                    $this->api->AddArtifact($_POST[self::$DestinationCollection],$_FILES[self::$NewArtifact]);
-                    header("Location:?ArtifactAdded=True");   
-            //     }
-            // }
+            $this->api->AddArtifact($_POST[self::$DestinationCollection],$_FILES[self::$NewArtifact]);
+            header("Location:?ArtifactAdded=True");   
+
         }
     }
     

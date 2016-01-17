@@ -72,6 +72,11 @@ class Api
     {
         if (isset($this->Collections[$collectionID]))
         {
+            if ($this->Collections[$collectionID]->GetParent() != null )
+            {
+                $this->Collections[$collectionID]->GetParent()->RemoveChild($collectionID);
+            }
+            
             $this->_deleteCollection($this->Collections[$collectionID]);
         }
         else
@@ -83,14 +88,14 @@ class Api
         file_put_contents(self::$Collectionpath, $this->serialized);
     }
     
-    private function _deleteCollection($collection)
+    private function _deleteCollection($collection) //Hela parentcollectionen
     {
-        $children = $collection->getChilds();
-        foreach ($children as $child) {
-            $this->_deleteCollection($child);
-            unset($children[$child->getCollectionID()]);
+        $children = $collection->getChilds(); //Hämta childcollections
+        foreach ($children as $child) { //För varje child på parenten
+            $this->_deleteCollection($child); //Kör den här funktionen med childet, (går igenom alla mappar)..
+            unset($children[$child->getCollectionID()]); //Tar bort childet ur childcollections på objektet.
         }
-        unset($this->Collections[$collection->getCollectionID()]);
+        unset($this->Collections[$collection->getCollectionID()]); //Tar slutligen bort collectionen med ID:t som blev inskickat..
     }
     
     public function AddArtifact($CollectionID, $Artifact)
